@@ -22,9 +22,6 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
-def start(update, context):
-    context.bot.send_message(chat_id=update.message.chat_id, text="testing")
-
 def today(update, context):
     logger.info('Received {} message from {}'.format(update.effective_message['text'],
                 update.effective_user['username']))
