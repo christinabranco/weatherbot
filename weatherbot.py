@@ -22,47 +22,36 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
-def today(update, context):
-    logger.info('Received {} message from {}'.format(update.effective_message['text'],
-                update.effective_user['username']))
+def get_weather(weather_date):
     params = {'id':2643743}
     params.update(weather_credentials)
     r = requests.get(
             'http://api.openweathermap.org/data/2.5/forecast',
             params = params
             )
-    todays_date = date.today()
     weather= r.json()['list']
-    todays_weather = [
+    day_weather = [
             item for item in weather 
-            if datetime.fromtimestamp(item['dt']).date() == todays_date
+            if datetime.fromtimestamp(item['dt']).date() == weather_date
             ]
-    todays_message = ''
-    for hour in todays_weather:
-        todays_message += message(hour)
+    weather_message = ''
+    for hour in day_weather:
+        weather_message += message(hour)
+    return weather_message
+    
+
+def today(update, context):
+    logger.info('Received {} message from {}'.format(update.effective_message['text'],
+                update.effective_user['username']))
+    todays_message = get_weather(date.today())
     context.bot.send_message(chat_id=update.message.chat_id, text=todays_message)
     
 def tomorrow(update, context):
     logger.info('Received {} message from {}'.format(update.effective_message['text'],
                 update.effective_user['username']))
-    params = {'id':2643743}
-    params.update(weather_credentials)
-    r = requests.get(
-            'http://api.openweathermap.org/data/2.5/forecast',
-            params=params
-            )
-    tomorrows_date = date.today() + timedelta(1)
-    weather= r.json()['list']
-    tomorrows_weather = [
-            item for item in weather 
-            if datetime.fromtimestamp(item['dt']).date() == tomorrows_date
-            ]
-    tomorrows_message = ''
-    for hour in tomorrows_weather:
-        tomorrows_message += message(hour)
+    tomorrows_message = get_weather(date.today() + timedelta(1))
     context.bot.send_message(chat_id=update.message.chat_id, text=tomorrows_message)
-    
-        
+           
 
 def to_celsius(temp):
     temp_in_c = round(temp-273.15)
@@ -80,10 +69,8 @@ def message(item):
 updater = Updater(token=bot_credentials['token'],
                   use_context = True)
 
-start_handler = CommandHandler('start', start)
 today_handler = CommandHandler('today', today)
 tomorrow_handler = CommandHandler('tomorrow', tomorrow)
-updater.dispatcher.add_handler(start_handler)
 updater.dispatcher.add_handler(today_handler)
 updater.dispatcher.add_handler(tomorrow_handler)
   
