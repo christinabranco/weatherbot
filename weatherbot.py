@@ -26,6 +26,8 @@ def start(update, context):
     context.bot.send_message(chat_id=update.message.chat_id, text="testing")
 
 def today(update, context):
+    logger.info('Received {} message from {}'.format(update.effective_message['text'],
+                update.effective_user['username']))
     params = {'id':2643743}
     params.update(weather_credentials)
     r = requests.get(
@@ -44,7 +46,8 @@ def today(update, context):
     context.bot.send_message(chat_id=update.message.chat_id, text=todays_message)
     
 def tomorrow(update, context):
-    print('running tomorrow...')
+    logger.info('Received {} message from {}'.format(update.effective_message['text'],
+                update.effective_user['username']))
     params = {'id':2643743}
     params.update(weather_credentials)
     r = requests.get(
