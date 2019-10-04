@@ -18,7 +18,8 @@ bot_credentials = json.load(open('bot_credentials.json'))
 
 
 #initialise logger
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+logging.basicConfig(filename='bot.log',
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
 
 logger = logging.getLogger(__name__)
