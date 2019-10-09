@@ -14,7 +14,7 @@ import logging
 
 #Credentials for OpenWeather API and Telegram bot stored elsewhere
 weather_credentials = json.load(open('weather_credentials.json'))
-bot_credentials = json.load(open('bot_credentials.json'))
+bot_credentials = json.load(open('testbot_credentials.json'))
 
 
 #initialise logger
@@ -28,6 +28,9 @@ def to_celsius(temp):
     """Converts temperature in Kelvin to Celsius"""
     temp_in_c = round(temp-273.15)
     return temp_in_c
+
+def start(update, context):
+    context.bot.send_message(chat_id=update.effective_chat.id, text="Welcome to WeatherBot!")
 
 def message(item):
     """Formats each 'chunk' of weather info into a nice message."""
@@ -73,13 +76,16 @@ def get_weather(weather_date):
 #initializes the bot
 updater = Updater(token=bot_credentials['token'],
                   use_context = True)
-#creates CommanHandler objects for today and tomorrow commands
+
+#creates handler objects for today and tomorrow commands
 today_handler = CommandHandler('today', today)
 tomorrow_handler = CommandHandler('tomorrow', tomorrow)
+start_handler = CommandHandler('start', start)
 
 #adds aforementioned command handler objects to dispatcher
 updater.dispatcher.add_handler(today_handler)
 updater.dispatcher.add_handler(tomorrow_handler)
+updater.dispatcher.add_handler(start_handler)
 
 #starts listening for events  
 updater.start_polling() 
