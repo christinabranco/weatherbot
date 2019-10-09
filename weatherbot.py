@@ -14,7 +14,7 @@ import logging
 
 #Credentials for OpenWeather API and Telegram bot stored elsewhere
 weather_credentials = json.load(open('weather_credentials.json'))
-bot_credentials = json.load(open('testbot_credentials.json'))
+bot_credentials = json.load(open('bot_credentials.json'))
 
 
 #initialise logger
